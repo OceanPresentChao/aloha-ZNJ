@@ -22,12 +22,13 @@ def prep_robots(master_bot, puppet_bot):
     # move arms to starting position
     start_arm_qpos = START_ARM_POSE[:6]
     start_arm_qpos_master = MY_MASTER_START_ARM_POS[:6]
+
     #move_arms([master_bot, puppet_bot], [start_arm_qpos] * 2, move_time=1)
     move_arms([master_bot, puppet_bot], [start_arm_qpos_master, start_arm_qpos], move_time=1)
-    # move grippers to starting position
-    #move_grippers([master_bot, puppet_bot], [MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE], move_time=0.5)
-    #初始化位置
-    #move_grippers([master_bot, puppet_bot], [0.3, -2.3], move_time=2)
+
+    # move grippers to starting position,初始化位置
+
+    # move_grippers([master_bot, puppet_bot], [MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE], move_time=0.5)
     move_grippers([master_bot, puppet_bot], [0.72, -1.638], move_time=2)
 
 
@@ -42,25 +43,12 @@ def press_to_start(master_bot):
     pressed = False
     while not pressed:
         gripper_pos = get_arm_gripper_positions(master_bot)
-        #gripper_join = get_arm_joint_positions(master_bot)
-        #print(gripper_join)
-        print(gripper_pos)
         if abs(gripper_pos - close_thresh) < 0.01:
             pressed = True
             kay = 1
         time.sleep(DT/10)
     torque_off(master_bot)
     print(f'Started!')
-
-def press_to_puppet_start(puppet_bot):
-    #puppet_bot.dxl.robot_torque_enable("single", "gripper", False)
-    pressed = False
-    while not pressed:
-        gripper_pos = get_arm_gripper_positions(puppet_bot)
-        #gripper_join = get_arm_joint_positions(master_bot)
-        #print(gripper_join)
-        print(gripper_pos)
-
 
 def teleop(robot_side):
     """ A standalone function for experimenting with teleoperation. No data recording. """
@@ -85,8 +73,8 @@ def teleop(robot_side):
 
         gripper_pos1 = get_arm_gripper_positions(puppet_bot)
         gripper_pos2 = get_arm_gripper_positions(master_bot)
-        print(gripper_pos1)
-        print(gripper_pos2)
+        print("gripper_pos1", gripper_pos1)
+        print("gripper_pos2", gripper_pos2)
 
         # sleep DT
         time.sleep(DT)
