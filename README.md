@@ -1,3 +1,16 @@
+# ALOHA-ZNJ
+
+This is the BJROBOT(ZNJ/智能佳) version of ALOHA. ZNJ/智能佳 is the official Chinese region agent of aloha. But there are some differences in config code.
+
+The code file modified are as following:
+
+- aloha_scripts/one_side_teleop.py
+- aloha_scripts/constants.py
+- config/mater_modes_left.yaml
+- config/mater_modes_right.yaml
+- config/puppet_modes_left.yaml
+- config/puppet_modes_right.yaml
+
 # ALOHA: A Low-cost Open-source Hardware System for Bimanual Teleoperation
 
 #### Project Website: https://tonyzhaozh.github.io/aloha/

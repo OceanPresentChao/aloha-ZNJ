@@ -3,7 +3,9 @@ port: /dev/ttyDXL_master_right
 groups:
   arm:
     torque_enable: false
+    profile_type: time
 
 singles:
   gripper:
     torque_enable: false
+    operating_mode: pwm
