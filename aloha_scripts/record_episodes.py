@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 
 from constants import DT, START_ARM_POSE, TASK_CONFIGS
-from constants import MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE, PUPPET_GRIPPER_JOINT_OPEN
+from constants import MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE, PUPPET_GRIPPER_JOINT_OPEN, MY_MASTER_START_ARM_POS
 from robot_utils import Recorder, ImageRecorder, get_arm_gripper_positions
 from robot_utils import move_arms, torque_on, torque_off, move_grippers
 from real_env import make_real_env, get_action
@@ -40,23 +40,36 @@ def opening_ceremony(master_bot_left, master_bot_right, puppet_bot_left, puppet_
     torque_on(master_bot_right)
 
     # move arms to starting position
-    start_arm_qpos = START_ARM_POSE[:6]
-    move_arms([master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], [start_arm_qpos] * 4, move_time=1.5)
-    # move grippers to starting position
-    move_grippers([master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], [MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE] * 2, move_time=0.5)
+    start_arm_qpos_puppet = START_ARM_POSE[:6]
+    start_arm_qpos_master = MY_MASTER_START_ARM_POS[:6]
 
+    # move_arms([master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], [start_arm_qpos_puppet] * 4, move_time=1.5)
+    move_arms(
+        [master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], [start_arm_qpos_master, start_arm_qpos_puppet] * 2, 
+        move_time=1.5
+        )
+
+
+    # move grippers to starting position
+    # move_grippers([master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], [MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE] * 2, move_time=0.5)
+    move_grippers(
+        [master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], 
+        [0.72, -1.638] * 2, 
+        move_time=2
+        )
 
     # press gripper to start data collection
     # disable torque for only gripper joint of master robot to allow user movement
     master_bot_left.dxl.robot_torque_enable("single", "gripper", False)
     master_bot_right.dxl.robot_torque_enable("single", "gripper", False)
     print(f'Close the gripper to start')
-    close_thresh = -0.3
+    # close_thresh = -0.3
+    close_thresh = 0.0
     pressed = False
     while not pressed:
         gripper_pos_left = get_arm_gripper_positions(master_bot_left)
         gripper_pos_right = get_arm_gripper_positions(master_bot_right)
-        if (gripper_pos_left < close_thresh) and (gripper_pos_right < close_thresh):
+        if abs(gripper_pos_left - close_thresh) < 0.03 and abs(gripper_pos_right - close_thresh) < 0.03:
             pressed = True
         time.sleep(DT/10)
     torque_off(master_bot_left)
