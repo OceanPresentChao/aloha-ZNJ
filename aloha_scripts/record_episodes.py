@@ -54,7 +54,7 @@ def opening_ceremony(master_bot_left, master_bot_right, puppet_bot_left, puppet_
     # move_grippers([master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], [MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE] * 2, move_time=0.5)
     move_grippers(
         [master_bot_left, puppet_bot_left, master_bot_right, puppet_bot_right], 
-        [0.72, -1.638] * 2, 
+        [MASTER_GRIPPER_JOINT_OPEN, PUPPET_GRIPPER_JOINT_OPEN] * 2, 
         move_time=2
         )
 

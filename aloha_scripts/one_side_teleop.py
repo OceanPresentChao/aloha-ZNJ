@@ -29,7 +29,7 @@ def prep_robots(master_bot, puppet_bot):
     # move grippers to starting position,初始化位置
 
     # move_grippers([master_bot, puppet_bot], [MASTER_GRIPPER_JOINT_MID, PUPPET_GRIPPER_JOINT_CLOSE], move_time=0.5)
-    move_grippers([master_bot, puppet_bot], [0.72, -1.638], move_time=2)
+    move_grippers([master_bot, puppet_bot], [MASTER_GRIPPER_JOINT_OPEN, PUPPET_GRIPPER_JOINT_OPEN], move_time=2)
 
 
 def press_to_start(master_bot):
@@ -43,7 +43,7 @@ def press_to_start(master_bot):
     pressed = False
     while not pressed:
         gripper_pos = get_arm_gripper_positions(master_bot)
-        if abs(gripper_pos - close_thresh) < 0.01:
+        if abs(gripper_pos - close_thresh) < 0.03:
             pressed = True
             kay = 1
         time.sleep(DT/10)
@@ -56,7 +56,6 @@ def teleop(robot_side):
     master_bot = InterbotixManipulatorXS(robot_model="wx250s", group_name="arm", gripper_name="gripper", robot_name=f'master_{robot_side}', init_node=False)
 
     prep_robots(master_bot, puppet_bot)
-    #press_to_puppet_start(puppet_bot)
     press_to_start(master_bot)
 
     ### Teleoperation loop
